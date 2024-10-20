@@ -9,6 +9,7 @@
 #define ECHO_PIN 4      // Pino Echo do HC-SR04
 
 #define PIR_PIN 17       // Pino do sensor PIR
+#define BUZZER_PIN 16 // pino do buzzer
 
 
 
@@ -24,6 +25,9 @@ void setup() {
   pinMode(ECHO_PIN, INPUT);
 
   pinMode(PIR_PIN, INPUT);
+
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(BUZZER_PIN, LOW); // Começa com o buzzer desligado
 }
 
 void loop() {
@@ -102,8 +106,9 @@ void detectPresence() {
   
   if (pirState == HIGH) { // Movimento detectado
     Serial.println("Movimento detectado! Ativando sistema de segurança.");
-    // Aqui você pode adicionar código para ativar alarmes ou outras ações de segurança
-    // Exemplo: digitalWrite(ALARM_PIN, HIGH);
+    digitalWrite(BUZZER_PIN, HIGH); // Ativa o buzzer
+    delay(1000); // Buzzer ligado por 1 segundo
+    digitalWrite(BUZZER_PIN, LOW); // Desativa o buzzer
   } else {
     Serial.println("Nenhum movimento.");
   }
