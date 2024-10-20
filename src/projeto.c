@@ -8,6 +8,9 @@
 #define TRIG_PIN 2      // Pino Trigger do HC-SR04
 #define ECHO_PIN 4      // Pino Echo do HC-SR04
 
+#define PIR_PIN 17       // Pino do sensor PIR
+
+
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -19,10 +22,15 @@ void setup() {
 
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
+
+  pinMode(PIR_PIN, INPUT);
 }
 
 void loop() {
   delay(2000); // Atraso para evitar leituras muito frequentes
+
+  // Verifica a presença usando o sensor PIR
+  detectPresence();
 
   // Leitura de temperatura e umidade
   float humidity = dht.readHumidity();
@@ -53,7 +61,6 @@ void loop() {
     digitalWrite(RELAY_PIN, LOW); // Garante que o relé esteja desligado
     return;
   } 
-
 
   // Controle de irrigação baseado na temperatura e umidade
   if (humidity < 40) { // Umidade baixa
@@ -88,4 +95,16 @@ float getWaterLevel() {
   // Calcula a distância (em cm)
   float distance = duration * 0.034 / 2; // Divide por 2 porque a medição vai e volta
   return distance;
+}
+
+void detectPresence() {
+  int pirState = digitalRead(PIR_PIN);
+  
+  if (pirState == HIGH) { // Movimento detectado
+    Serial.println("Movimento detectado! Ativando sistema de segurança.");
+    // Aqui você pode adicionar código para ativar alarmes ou outras ações de segurança
+    // Exemplo: digitalWrite(ALARM_PIN, HIGH);
+  } else {
+    Serial.println("Nenhum movimento.");
+  }
 }
