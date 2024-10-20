@@ -4,6 +4,11 @@
 #define DHTTYPE DHT22   // Tipo do sensor DHT
 #define RELAY_PIN 5     // Pino do relé
 
+
+#define TRIG_PIN 2      // Pino Trigger do HC-SR04
+#define ECHO_PIN 4      // Pino Echo do HC-SR04
+
+
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
@@ -11,6 +16,9 @@ void setup() {
   dht.begin();
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, LOW); // Começa com o relé desligado
+
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
 }
 
 void loop() {
@@ -33,6 +41,20 @@ void loop() {
   Serial.print(temperature);
   Serial.println("°C");
 
+  // Lê o nível de água
+  float waterLevel = getWaterLevel();
+  Serial.print("Nível de água: ");
+  Serial.print(waterLevel);
+  Serial.println(" cm");
+
+  // Controle de irrigação baseado na temperatura, umidade e nível de água
+  if (waterLevel < 10) { // Nível de água baixo
+    Serial.println("Nível de água baixo! Irrigação não ativada.");
+    digitalWrite(RELAY_PIN, LOW); // Garante que o relé esteja desligado
+    return;
+  } 
+
+
   // Controle de irrigação baseado na temperatura e umidade
   if (humidity < 40) { // Umidade baixa
     Serial.println("Umidade baixa! Ativando irrigação.");
@@ -50,4 +72,20 @@ void loop() {
     Serial.println("Temperatura baixa! Desativando irrigação.");
     digitalWrite(RELAY_PIN, LOW);
   }
+}
+
+float getWaterLevel() {
+  // Envia um pulso de 10µs para o Trigger
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  
+  // Lê o tempo que o pulso leva para voltar
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  
+  // Calcula a distância (em cm)
+  float distance = duration * 0.034 / 2; // Divide por 2 porque a medição vai e volta
+  return distance;
 }
