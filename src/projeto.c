@@ -11,7 +11,7 @@
 #define PIR_PIN 17       // Pino do sensor PIR
 #define BUZZER_PIN 16 // pino do buzzer
 
-
+#define LDR_PIN 19      // Pino do LDR
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -59,29 +59,42 @@ void loop() {
   Serial.print(waterLevel);
   Serial.println(" cm");
 
+   // Lê a luminosidade do LDR
+  int ldrValue = analogRead(LDR_PIN);
+  Serial.print("Luminosidade (LDR): ");
+  Serial.println(ldrValue);
+
   // Controle de irrigação baseado na temperatura, umidade e nível de água
   if (waterLevel < 10) { // Nível de água baixo
     Serial.println("Nível de água baixo! Irrigação não ativada.");
     digitalWrite(RELAY_PIN, LOW); // Garante que o relé esteja desligado
-    return;
-  } 
+  } else {
+    // Ajuste da irrigação com base na luminosidade
+    if (ldrValue < 300) { // Luz baixa (ajuste conforme necessário)
+      Serial.println("Luz baixa! Aumentando irrigação.");
+      digitalWrite(RELAY_PIN, HIGH); // Liga o relé
+    } else if (ldrValue > 700) { // Luz alta (ajuste conforme necessário)
+      Serial.println("Luz alta! Diminuindo irrigação.");
+      digitalWrite(RELAY_PIN, LOW); // Desliga o relé
+    }
 
-  // Controle de irrigação baseado na temperatura e umidade
-  if (humidity < 40) { // Umidade baixa
-    Serial.println("Umidade baixa! Ativando irrigação.");
-    digitalWrite(RELAY_PIN, HIGH); // Liga o relé
-  } else if (humidity > 60) { // Umidade alta
-    Serial.println("Umidade alta! Desativando irrigação.");
-    digitalWrite(RELAY_PIN, LOW); // Desliga o relé
-  }
+    // Controle baseado na umidade
+    if (humidity < 40) { // Umidade baixa
+      Serial.println("Umidade baixa! Ativando irrigação.");
+      digitalWrite(RELAY_PIN, HIGH); // Liga o relé
+    } else if (humidity > 60) { // Umidade alta
+      Serial.println("Umidade alta! Desativando irrigação.");
+      digitalWrite(RELAY_PIN, LOW); // Desliga o relé
+    }
 
-  // Adicione condições para temperatura se necessário
-  if (temperature > 30) { // Temperatura alta
-    Serial.println("Temperatura alta! Aumentando irrigação.");
-    digitalWrite(RELAY_PIN, HIGH);
-  } else if (temperature < 20) { // Temperatura baixa
-    Serial.println("Temperatura baixa! Desativando irrigação.");
-    digitalWrite(RELAY_PIN, LOW);
+    // Adiciona condições para temperatura
+    if (temperature > 30) { // Temperatura alta
+      Serial.println("Temperatura alta! Aumentando irrigação.");
+      digitalWrite(RELAY_PIN, HIGH);
+    } else if (temperature < 20) { // Temperatura baixa
+      Serial.println("Temperatura baixa! Desativando irrigação.");
+      digitalWrite(RELAY_PIN, LOW);
+    }
   }
 }
 
