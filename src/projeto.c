@@ -1,16 +1,18 @@
 #include <DHT.h>
 
-#define DHTPIN 23       // Pino onde o DHT22 está conectado
-#define DHTTYPE DHT22   // Tipo do sensor DHT
-#define RELAY_PIN 5     // Pino do relé
+#define DHTPIN 23     // Pino onde o DHT22 está conectado
+#define DHTTYPE DHT22 // Tipo do sensor DHT
+#define RELAY_PIN 5   // Pino do relé
 
-#define TRIG_PIN 2      // Pino Trigger do HC-SR04
-#define ECHO_PIN 4      // Pino Echo do HC-SR04
+#define TRIG_PIN 2 // Pino Trigger do HC-SR04
+#define ECHO_PIN 4 // Pino Echo do HC-SR04
 
-#define PIR_PIN 17      // Pino do PIR
-#define BUZZER_PIN 16   // Pino do buzzer
+#define PIR_PIN 14    // Pino do PIR
+#define BUZZER_PIN 16 // Pino do buzzer
 
-#define LDR_PIN 19      // Pino do LDR
+
+#define LDR_PIN 34 // Pin do LDR
+
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -25,6 +27,7 @@ void setup() {
   pinMode(ECHO_PIN, INPUT);
 
   pinMode(PIR_PIN, INPUT);
+  pinMode(LDR_PIN, INPUT);
 
   pinMode(BUZZER_PIN, OUTPUT);
   digitalWrite(BUZZER_PIN, LOW); // Começa com o buzzer desligado
@@ -65,35 +68,48 @@ void loop() {
   Serial.println(ldrValue);
 
   // Controle de irrigação baseado na temperatura, umidade e nível de água
-  if (waterLevel < 10) { // Nível de água baixo
+  if (waterLevel > 200) { // Nível de água baixo (quando a distancia entre o sensor e a água é maior que 200cm)
     Serial.println("Nível de água baixo! Irrigação não ativada.");
     digitalWrite(RELAY_PIN, LOW); // Garante que o relé esteja desligado
   } else {
-    // Ajuste da irrigação com base na luminosidade
-    if (ldrValue < 300) { // Luz baixa (ajuste conforme necessário)
-      Serial.println("Luz baixa! Aumentando irrigação.");
-      digitalWrite(RELAY_PIN, HIGH); // Liga o relé
-    } else if (ldrValue > 700) {     // Luz alta (ajuste conforme necessário)
-      Serial.println("Luz alta! Diminuindo irrigação.");
-      digitalWrite(RELAY_PIN, LOW); // Desliga o relé
+    // Variáveis para controle de tempo do relé
+    int relayOnTime = 0;
+    int relayOffTime = 0;
+
+    // Ajuste do tempo de ativação do relé com base na luminosidade
+    if (ldrValue > 700) { // Luz alta (ajuste conforme necessário)
+        Serial.println("Luz alta! Aumentando tempo de irrigação.");
+        relayOnTime += 5 * 60000; // Aumenta o tempo de ativação do relé (5 minutos)
+    } else if (ldrValue < 300) { // Luz baixa (ajuste conforme necessário)
+        Serial.println("Luz baixa! Diminuindo tempo de irrigação.");
+        relayOffTime += 5 * 60000; // Aumenta o tempo de desativação do relé (5 minutos)
+    }
+
+    // Ajuste do tempo de ativação do relé com base na temperatura
+    if (temperature > 30) { // Temperatura alta
+      Serial.println("Temperatura alta! Aumentando tempo de irrigação.");
+      relayOnTime += 5 * 60000; // Aumenta o tempo de ativação do relé (5 minutos)
+    } else if (temperature < 20) { // Temperatura baixa
+      Serial.println("Temperatura baixa! Diminuindo tempo de irrigação.");
+      relayOffTime += 5 * 60000; // Aumenta o tempo de desativação do relé (5 minutos)
     }
 
     // Controle baseado na umidade
     if (humidity < 40) { // Umidade baixa
       Serial.println("Umidade baixa! Ativando irrigação.");
       digitalWrite(RELAY_PIN, HIGH); // Liga o relé
-    } else if (humidity > 60) {      // Umidade alta
+      delay(relayOnTime);           // Mantém o relé ligado pelo tempo calculado
+      digitalWrite(RELAY_PIN, LOW); // Desliga o relé
+    } else if (humidity > 60) {     // Umidade alta
       Serial.println("Umidade alta! Desativando irrigação.");
       digitalWrite(RELAY_PIN, LOW); // Desliga o relé
-    }
-
-    // Adiciona condições para temperatura
-    if (temperature > 30) { // Temperatura alta
-      Serial.println("Temperatura alta! Aumentando irrigação.");
-      digitalWrite(RELAY_PIN, HIGH);
-    } else if (temperature < 20) { // Temperatura baixa
-      Serial.println("Temperatura baixa! Desativando irrigação.");
-      digitalWrite(RELAY_PIN, LOW);
+    } else {
+      // Se a umidade estiver dentro do intervalo desejado, usa os tempos
+      // calculados
+      digitalWrite(RELAY_PIN, HIGH); // Liga o relé
+      delay(relayOnTime);           // Mantém o relé ligado pelo tempo calculado
+      digitalWrite(RELAY_PIN, LOW); // Desliga o relé
+      delay(relayOffTime); // Mantém o relé desligado pelo tempo calculado
     }
   }
 }
