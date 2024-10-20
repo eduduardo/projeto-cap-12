@@ -1,15 +1,14 @@
 #include <DHT.h>
 
-#define DHTPIN 23        // Pino onde o DHT22 está conectado
+#define DHTPIN 23       // Pino onde o DHT22 está conectado
 #define DHTTYPE DHT22   // Tipo do sensor DHT
 #define RELAY_PIN 5     // Pino do relé
-
 
 #define TRIG_PIN 2      // Pino Trigger do HC-SR04
 #define ECHO_PIN 4      // Pino Echo do HC-SR04
 
-#define PIR_PIN 17       // Pino do sensor PIR
-#define BUZZER_PIN 16 // pino do buzzer
+#define PIR_PIN 17      // Pino do PIR
+#define BUZZER_PIN 16   // Pino do buzzer
 
 #define LDR_PIN 19      // Pino do LDR
 
@@ -18,6 +17,7 @@ DHT dht(DHTPIN, DHTTYPE);
 void setup() {
   Serial.begin(115200);
   dht.begin();
+
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, LOW); // Começa com o relé desligado
 
@@ -59,7 +59,7 @@ void loop() {
   Serial.print(waterLevel);
   Serial.println(" cm");
 
-   // Lê a luminosidade do LDR
+  // Lê a luminosidade do LDR
   int ldrValue = analogRead(LDR_PIN);
   Serial.print("Luminosidade (LDR): ");
   Serial.println(ldrValue);
@@ -73,7 +73,7 @@ void loop() {
     if (ldrValue < 300) { // Luz baixa (ajuste conforme necessário)
       Serial.println("Luz baixa! Aumentando irrigação.");
       digitalWrite(RELAY_PIN, HIGH); // Liga o relé
-    } else if (ldrValue > 700) { // Luz alta (ajuste conforme necessário)
+    } else if (ldrValue > 700) {     // Luz alta (ajuste conforme necessário)
       Serial.println("Luz alta! Diminuindo irrigação.");
       digitalWrite(RELAY_PIN, LOW); // Desliga o relé
     }
@@ -82,7 +82,7 @@ void loop() {
     if (humidity < 40) { // Umidade baixa
       Serial.println("Umidade baixa! Ativando irrigação.");
       digitalWrite(RELAY_PIN, HIGH); // Liga o relé
-    } else if (humidity > 60) { // Umidade alta
+    } else if (humidity > 60) {      // Umidade alta
       Serial.println("Umidade alta! Desativando irrigação.");
       digitalWrite(RELAY_PIN, LOW); // Desliga o relé
     }
@@ -105,23 +105,24 @@ float getWaterLevel() {
   digitalWrite(TRIG_PIN, HIGH);
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
-  
+
   // Lê o tempo que o pulso leva para voltar
   long duration = pulseIn(ECHO_PIN, HIGH);
-  
+
   // Calcula a distância (em cm)
-  float distance = duration * 0.034 / 2; // Divide por 2 porque a medição vai e volta
+  float distance =
+      duration * 0.034 / 2; // Divide por 2 porque a medição vai e volta
   return distance;
 }
 
 void detectPresence() {
   int pirState = digitalRead(PIR_PIN);
-  
+
   if (pirState == HIGH) { // Movimento detectado
     Serial.println("Movimento detectado! Ativando sistema de segurança.");
     digitalWrite(BUZZER_PIN, HIGH); // Ativa o buzzer
-    delay(1000); // Buzzer ligado por 1 segundo
-    digitalWrite(BUZZER_PIN, LOW); // Desativa o buzzer
+    delay(1000);                    // Buzzer ligado por 1 segundo
+    digitalWrite(BUZZER_PIN, LOW);  // Desativa o buzzer
   } else {
     Serial.println("Nenhum movimento.");
   }
