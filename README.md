@@ -1,7 +1,7 @@
 # FIAP - Faculdade de Informática e Administração Paulista
 
 <p align="center">
-<a href= "https://www.fiap.com.br/"><img src="https://github.com/lfusca/templateFiap/raw/main/assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
+<a href="https://www.fiap.com.br/"><img src="https://github.com/lfusca/templateFiap/raw/main/assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Administração Paulista" border="0" width="40%" height="40%"></a>
 </p>
 
 <br>
@@ -10,13 +10,18 @@
 
 Grupo 11
 
-## 👨‍🎓 Integrantes: 
+## 👨‍🎓 Integrantes:
+
 - <a href="https://www.linkedin.com/in/edu-ramos/">Eduardo Augusto Ramos</a>
 
 ## 👩‍🏫 Professores:
-### Tutor(a) 
+
+### Tutor(a)
+
 - Lucas
+
 ### Coordenador(a)
+
 - André
 
 ## 📜 Descrição
@@ -38,7 +43,7 @@ O objetivo deste projeto é criar um sistema inteligente de monitoramento agríc
 2. **Controle de irrigação automatizada**: o sensor HC-SR04 verifica o nível de água nos tanques e aciona a irrigação apenas quando o nível está adequado, evitando desperdício de água.
 3. **Detecção de presença**: o sensor PIR pode ser utilizado para detectar invasões de animais ou pessoas em áreas restritas da fazenda, ativando alarmes ou sistemas de segurança.
 4. **Ajuste de irrigação com base na luminosidade**: o sensor LDR mede a quantidade de luz solar recebida e ajusta a irrigação automaticamente, diminuindo a quantidade de água em dias mais ensolarados e aumentando em dias nublados.
-5. **Alertas sonoros**: o buzzer emite sons de alerta em caso de detecção de presença de algo
+5. **Alertas sonoros**: o buzzer emite sons de alerta em caso de detecção de presença de algo.
 6. **Controle do sistema de irrigação**: o relé controla a bomba de água, ligando e desligando conforme as condições monitoradas pelos sensores, garantindo uma irrigação eficiente e automatizada.
 
 ## 📁 Estrutura de pastas
@@ -53,27 +58,39 @@ Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
 ## 🔧 Como executar o código no Wokwi
 
 Pré-requisitos
+
 - Simulador: Wokwi.com
 
 Passo a passo
-1. Clone o repositório:
+
+1. Caso queira clone o repositório:
+
 ```sh
 git clone https://github.com/eduduardo/projeto-cap-12.git
 cd projeto-cap-12
 ```
 
 2. Acesse o Wokwi:
-- Vá para Wokwi.com.
-3. Acesse o projeto: https://wokwi.com/projects/412186039656924161
+
+- Vá para [Wokwi](https://wokwi.com/).
+
+3. Acesse o link do projeto: https://wokwi.com/projects/412186039656924161
 4. Inicie uma nova simulação:
+
 - Clique em Start Simulation para iniciar a simulação.
+
 5. Verifique a saída no Monitor Serial:
+
 - Utilize o Monitor Serial do Wokwi para visualizar as mensagens de funcionamento do sistema.
 
+6. Clique nos sensores e manipule as variáveis para simular o ambiente e ter as diferentes condições para os casos de teste mais abaixo. 
+
 ## Como instalar as dependencias no wokwi
+
 Para instalar as dependências no Wokwi, siga os passos abaixo:
 
 1. **Acesse o Wokwi**:
+
    - Abra o navegador e vá para [Wokwi](https://wokwi.com/).
 
 2. **Crie um novo projeto ou acesse um projeto**:
@@ -87,39 +104,48 @@ Para instalar as dependências no Wokwi, siga os passos abaixo:
 
 <img src="./docs/diagram.png" alt="Diagrama do projeto">
 
---- 
+---
 
 ## Testes
 
 ### 1. Irrigação Desligada - Nível de Água Baixa
+
 ![Irrigação Desligada - Nível de Água Baixa](tests/irrigacao-desligada-nivel-agua-baixa.png)
+
 - **Descrição**: Este teste verifica o comportamento do sistema quando a irrigação está desligada e o nível de água está baixo.
 - **Expectativa**: O relê deve permanecer desligado, indicando que a irrigação não será ativada mesmo com o nível de água baixo.
 
 ### 2. Irrigação Desligada - Umidade Alta
+
 ![Irrigação Desligada - Umidade Alta](tests/irrigacao-desligada-umidade-alta.png)
+
 - **Descrição**: Este teste verifica o comportamento do sistema quando a irrigação está desligada e a umidade do solo está alta.
 - **Expectativa**: O relê do sistema deve permanecer desligado, pois a umidade alta indica que não há necessidade de irrigação.
 
 ### 3. Irrigação Ligada - Umidade Baixa, Luz Baixa, Diminui Tempo
+
 ![Irrigação Ligada - Umidade Baixa, Luz Baixa, Diminui Tempo](tests/irrigacao-ligada-umidade-baixa-luz-baixa-diminui-tempo.png)
+
 - **Descrição**: Este teste verifica o comportamento do sistema quando a irrigação está ligada, a umidade do solo está baixa, a luz está baixa e o tempo de irrigação é reduzido.
 - **Expectativa**: O relê do sistema deve ligar a irrigação para aumentar a umidade do solo, considerando as condições de baixa luz e ajustando o tempo de irrigação.
 
 ### 4. Irrigação Ligada - Umidade Baixa, Temperatura Alta, Luz Alta
+
 ![Irrigação Ligada - Umidade Baixa, Temperatura Alta, Luz Alta](tests/irrigacao-ligada-umidade-baixa-temperatura-alta-luz-alta.png)
+
 - **Descrição**: Este teste verifica o comportamento do sistema quando a irrigação está ligada, a umidade do solo está baixa, a temperatura está alta e a luz está alta.
 - **Expectativa**: O relê do sistema deve ligar a irrigação para aumentar a umidade do solo, considerando as condições de alta temperatura e alta luz.
 
 ### 5. Movimento Detectado
+
 ![Movimento Detectado](tests/movimento-detectado.png)
+
 - **Descrição**: Este teste verifica o comportamento do sistema quando um movimento é detectado.
 - **Expectativa**: O sistema deve registrar o movimento detectado e, aciona o buzzer com um aviso sonoro.
 
-
 ## 🗃 Histórico de lançamentos
 
-* 0.1.0 * - 20/10/2024
+- 0.1.0 \* - 20/10/2024
 
 ## 📋 Licença
 
