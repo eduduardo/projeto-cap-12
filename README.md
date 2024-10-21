@@ -6,18 +6,18 @@
 
 <br>
 
-# Sistema Inteligente de Monitoramento Agrícola
+# Sistema Inteligente de Monitoramento Agrícola - Cap 12 - A Eletrônica de uma IA
 
-## Nome do grupo
+Grupo 11
 
 ## 👨‍🎓 Integrantes: 
-- <a href="https://www.linkedin.com/company/inova-fusca">Eduardo Augusto Ramos</a>
+- <a href="https://www.linkedin.com/in/edu-ramos/">Eduardo Augusto Ramos</a>
 
 ## 👩‍🏫 Professores:
 ### Tutor(a) 
-- <a href="https://www.linkedin.com/company/inova-fusca">Lucas</a>
+- Lucas
 ### Coordenador(a)
-- <a href="https://www.linkedin.com/company/inova-fusca">André</a>
+- André
 
 ## 📜 Descrição
 
@@ -70,9 +70,52 @@ cd projeto-cap-12
 5. Verifique a saída no Monitor Serial:
 - Utilize o Monitor Serial do Wokwi para visualizar as mensagens de funcionamento do sistema.
 
-## Diagrama
+## Como instalar as dependencias no wokwi
+Para instalar as dependências no Wokwi, siga os passos abaixo:
+
+1. **Acesse o Wokwi**:
+   - Abra o navegador e vá para [Wokwi](https://wokwi.com/).
+
+2. **Crie um novo projeto ou acesse um projeto**:
+
+3. **Instale bibliotecas**:
+   - Clique no ícone de "Library Manager" na barra lateral.
+   - Pesquise e selecione as bibliotecas que você precisa para o seu projeto. No caso precisamos da `DHT sensor library` => https://www.arduinolibraries.info/libraries/dht-sensor-library
+   - Clique em "Add" para adicionar a biblioteca ao seu projeto.
+
+## Diagrama de componentes
 
 <img src="./docs/diagram.png" alt="Diagrama do projeto">
+
+--- 
+
+## Testes
+
+### 1. Irrigação Desligada - Nível de Água Baixa
+![Irrigação Desligada - Nível de Água Baixa](tests/irrigacao-desligada-nivel-agua-baixa.png)
+- **Descrição**: Este teste verifica o comportamento do sistema quando a irrigação está desligada e o nível de água está baixo.
+- **Expectativa**: O relê deve permanecer desligado, indicando que a irrigação não será ativada mesmo com o nível de água baixo.
+
+### 2. Irrigação Desligada - Umidade Alta
+![Irrigação Desligada - Umidade Alta](tests/irrigacao-desligada-umidade-alta.png)
+- **Descrição**: Este teste verifica o comportamento do sistema quando a irrigação está desligada e a umidade do solo está alta.
+- **Expectativa**: O relê do sistema deve permanecer desligado, pois a umidade alta indica que não há necessidade de irrigação.
+
+### 3. Irrigação Ligada - Umidade Baixa, Luz Baixa, Diminui Tempo
+![Irrigação Ligada - Umidade Baixa, Luz Baixa, Diminui Tempo](tests/irrigacao-ligada-umidade-baixa-luz-baixa-diminui-tempo.png)
+- **Descrição**: Este teste verifica o comportamento do sistema quando a irrigação está ligada, a umidade do solo está baixa, a luz está baixa e o tempo de irrigação é reduzido.
+- **Expectativa**: O relê do sistema deve ligar a irrigação para aumentar a umidade do solo, considerando as condições de baixa luz e ajustando o tempo de irrigação.
+
+### 4. Irrigação Ligada - Umidade Baixa, Temperatura Alta, Luz Alta
+![Irrigação Ligada - Umidade Baixa, Temperatura Alta, Luz Alta](tests/irrigacao-ligada-umidade-baixa-temperatura-alta-luz-alta.png)
+- **Descrição**: Este teste verifica o comportamento do sistema quando a irrigação está ligada, a umidade do solo está baixa, a temperatura está alta e a luz está alta.
+- **Expectativa**: O relê do sistema deve ligar a irrigação para aumentar a umidade do solo, considerando as condições de alta temperatura e alta luz.
+
+### 5. Movimento Detectado
+![Movimento Detectado](tests/movimento-detectado.png)
+- **Descrição**: Este teste verifica o comportamento do sistema quando um movimento é detectado.
+- **Expectativa**: O sistema deve registrar o movimento detectado e, aciona o buzzer com um aviso sonoro.
+
 
 ## 🗃 Histórico de lançamentos
 
